@@ -255,12 +255,14 @@ exports.getMySessions = async (req, res, next) => {
 
 /**
  * Get attendance for a subject
- * @route GET /api/attendance/subject/:subjectId
+ * @route GET /api/attendance/subject/:subjectId/:section (with section in URL)
+ * @route GET /api/attendance/subject/:subjectId (with section in query)
  * @access Staff (allocated), HOD, Admin
  */
 exports.getSubjectAttendance = async (req, res, next) => {
   try {
-    const { section, startDate, endDate } = req.query;
+    const { section: querySection, startDate, endDate } = req.query;
+    const urlSection = req.params.section;
     
     const settings = await InstitutionSettings.getSettings();
     
@@ -269,7 +271,10 @@ exports.getSubjectAttendance = async (req, res, next) => {
       academicYear: settings.currentAcademicYear
     };
     
+    // Section can come from URL parameter or query parameter
+    const section = urlSection || querySection;
     if (section) filter.section = section.toUpperCase();
+    
     if (startDate || endDate) {
       filter.date = {};
       if (startDate) filter.date.$gte = new Date(startDate);
@@ -736,6 +741,103 @@ exports.getStudentsForMarking = async (req, res, next) => {
         section: section.toUpperCase(),
         students,
         count: students.length
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get current student's attendance
+ * @route GET /api/attendance/my
+ * @access Student
+ */
+exports.getMyAttendance = async (req, res, next) => {
+  try {
+    const AttendanceRecord = require('../models/AttendanceRecord');
+    const SubjectAllocation = require('../models/SubjectAllocation');
+    const User = require('../models/User');
+    const InstitutionSettings = require('../models/InstitutionSettings');
+    const { ATTENDANCE_STATUS } = require('../config/constants');
+    
+    const settings = await InstitutionSettings.getSettings();
+    const student = await User.findById(req.user._id).populate('studentFields.program');
+    
+    const programId = student.studentFields?.program?._id || student.studentFields?.program;
+    const semester = student.studentFields?.currentSemester;
+    const section = student.studentFields?.section;
+    
+    if (!programId) {
+      return res.json({
+        success: true,
+        data: { overall: { present: 0, total: 0, percentage: 0 }, subjects: [] }
+      });
+    }
+    
+    // Get all subjects for student's program and semester
+    const allocations = await SubjectAllocation.find({
+      academicYear: settings.currentAcademicYear,
+      section: section,
+      isActive: true
+    }).populate({
+      path: 'subject',
+      match: { 
+        program: programId,
+        semester: semester
+      }
+    });
+    
+    const validAllocations = allocations.filter(a => a.subject);
+    const subjectIds = validAllocations.map(a => a.subject._id);
+    
+    // Get attendance records
+    const records = await AttendanceRecord.find({
+      subject: { $in: subjectIds },
+      academicYear: settings.currentAcademicYear,
+      'records.student': req.user._id
+    }).populate('subject', 'name code');
+    
+    // Calculate per subject
+    const subjectStats = {};
+    let totalPresent = 0;
+    let totalSessions = 0;
+    
+    for (const record of records) {
+      const subjectId = record.subject._id.toString();
+      if (!subjectStats[subjectId]) {
+        subjectStats[subjectId] = {
+          subject: record.subject,
+          present: 0,
+          total: 0
+        };
+      }
+      
+      const studentRecord = record.records.find(r => r.student.toString() === req.user._id.toString());
+      if (studentRecord) {
+        subjectStats[subjectId].total++;
+        totalSessions++;
+        if ([ATTENDANCE_STATUS.PRESENT, ATTENDANCE_STATUS.LATE, ATTENDANCE_STATUS.OD].includes(studentRecord.status)) {
+          subjectStats[subjectId].present++;
+          totalPresent++;
+        }
+      }
+    }
+    
+    const subjects = Object.values(subjectStats).map(s => ({
+      ...s,
+      percentage: s.total > 0 ? (s.present / s.total) * 100 : 0
+    }));
+    
+    res.json({
+      success: true,
+      data: {
+        overall: {
+          present: totalPresent,
+          total: totalSessions,
+          percentage: totalSessions > 0 ? (totalPresent / totalSessions) * 100 : 0
+        },
+        subjects
       }
     });
   } catch (error) {

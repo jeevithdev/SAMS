@@ -19,10 +19,10 @@ const handleValidation = (req, res, next) => {
   next();
 };
 
-// POST /api/auth/register - Register a new user (Admin only)
+// POST /api/auth/register - Register a new user (Admin: HOD only, HOD: staff/students)
 router.post('/register',
   protect,
-  authorize(ROLES.ADMIN),
+  authorize(ROLES.ADMIN, ROLES.HOD),
   [
     body('email').isEmail().withMessage('Valid email is required'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),

@@ -40,7 +40,7 @@ export default api;
 export const authAPI = {
   setupAdmin: (data) => api.post('/auth/setup-admin', data),
   login: (data) => api.post('/auth/login', data),
-  getProfile: () => api.get('/auth/profile'),
+  getProfile: () => api.get('/auth/me'),
   changePassword: (data) => api.put('/auth/change-password', data),
 };
 
@@ -104,8 +104,8 @@ export const activityCategoriesAPI = {
 // Activities
 export const activitiesAPI = {
   getAll: (params) => api.get('/activities', { params }),
-  getMyActivities: (params) => api.get('/activities/my', { params }),
-  getPendingVerification: (params) => api.get('/activities/pending', { params }),
+  getMyActivities: () => api.get('/activities/my-activities'),
+  getPendingVerification: (params) => api.get('/activities/pending-verification', { params }),
   getById: (id) => api.get(`/activities/${id}`),
   create: (formData) =>
     api.post('/activities', formData, {
@@ -114,6 +114,7 @@ export const activitiesAPI = {
   verify: (id, data) => api.put(`/activities/${id}/verify`, data),
   delete: (id) => api.delete(`/activities/${id}`),
   getPortfolio: (studentId) => api.get(`/activities/portfolio/${studentId}`),
+  getMyPortfolio: () => api.get('/activities/my-portfolio'),
 };
 
 // Attendance
@@ -136,11 +137,13 @@ export const marksAPI = {
   getByStudent: (studentId, params) =>
     api.get(`/marks/student/${studentId}`, { params }),
   getMyMarks: () => api.get('/marks/my'),
+  getMyConsolidated: () => api.get('/marks/my/consolidated'),
   enter: (data) => api.post('/marks/enter', data),
   update: (id, data) => api.put(`/marks/${id}`, data),
   calculateAttendanceMarks: (subjectId) =>
     api.post(`/marks/calculate-attendance/${subjectId}`),
   getConsolidated: (subjectId) => api.get(`/marks/consolidated/${subjectId}`),
+  getReport: (params) => api.get('/marks/report', { params }),
 };
 
 // Dashboard
@@ -158,10 +161,19 @@ export const reportsAPI = {
   getUnifiedProfile: (studentId) => api.get(`/reports/unified-profile/${studentId}`),
   exportPDF: (type, params) =>
     api.get(`/reports/export/${type}`, { params, responseType: 'blob' }),
+  generate: (params) => api.get('/reports/generate', { params }),
 };
 
 // Settings
 export const settingsAPI = {
   get: () => api.get('/settings'),
   update: (data) => api.put('/settings', data),
+};
+
+// Subject Requests (HOD workflow)
+export const subjectRequestsAPI = {
+  getAll: (params) => api.get('/subject-requests', { params }),
+  create: (data) => api.post('/subject-requests', data),
+  review: (id, data) => api.put(`/subject-requests/${id}/review`, data),
+  delete: (id) => api.delete(`/subject-requests/${id}`),
 };

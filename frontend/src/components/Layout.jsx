@@ -23,16 +23,20 @@ import {
 const navigation = {
   admin: [
     { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon },
-    { name: 'Users', href: '/admin/users', icon: UserGroupIcon },
     { name: 'Departments', href: '/admin/departments', icon: BuildingOfficeIcon },
+    { name: 'HODs', href: '/admin/hods', icon: UserGroupIcon },
     { name: 'Programs', href: '/admin/programs', icon: AcademicCapIcon },
     { name: 'Subjects', href: '/admin/subjects', icon: BookOpenIcon },
+    { name: 'Subject Requests', href: '/admin/subject-requests', icon: DocumentCheckIcon },
     { name: 'Allocations', href: '/admin/allocations', icon: ClipboardDocumentListIcon },
     { name: 'Activity Categories', href: '/admin/activity-categories', icon: FolderIcon },
     { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
   ],
   hod: [
     { name: 'Dashboard', href: '/hod/dashboard', icon: HomeIcon },
+    { name: 'Staff', href: '/hod/staff', icon: UserGroupIcon },
+    { name: 'Students', href: '/hod/students', icon: AcademicCapIcon },
+    { name: 'Subjects', href: '/hod/subjects', icon: BookOpenIcon },
     { name: 'Attendance Reports', href: '/staff/attendance/report', icon: CalendarDaysIcon },
     { name: 'Marks Reports', href: '/staff/marks/report', icon: ChartBarIcon },
     { name: 'Defaulters', href: '/hod/defaulters', icon: ExclamationTriangleIcon },

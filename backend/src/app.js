@@ -21,6 +21,7 @@ const marksRoutes = require('./routes/marks');
 const settingsRoutes = require('./routes/settings');
 const dashboardRoutes = require('./routes/dashboard');
 const reportRoutes = require('./routes/reports');
+const subjectRequestRoutes = require('./routes/subjectRequests');
 
 // Initialize express app
 const app = express();
@@ -74,6 +75,7 @@ app.use('/api/marks', marksRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/subject-requests', subjectRequestRoutes);
 
 // 404 handler
 app.use((req, res) => {

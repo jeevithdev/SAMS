@@ -47,6 +47,9 @@ router.put('/:id',
   attendanceController.editAttendance
 );
 
+// GET /api/attendance/my - Get current student's attendance (Student)
+router.get('/my', protect, authorize(ROLES.STUDENT), attendanceController.getMyAttendance);
+
 // GET /api/attendance/my-sessions - Get staff's marked sessions (Staff, HOD)
 router.get('/my-sessions', protect, authorize(ROLES.STAFF, ROLES.HOD), attendanceController.getMySessions);
 
@@ -55,6 +58,13 @@ router.get('/students/:subjectId/:section', protect, authorize(ROLES.STAFF, ROLE
 
 // GET /api/attendance/subject/:subjectId/:section - Get subject attendance records (Staff with allocation, HOD, Admin)
 router.get('/subject/:subjectId/:section', 
+  protect, 
+  authorize(ROLES.STAFF, ROLES.HOD, ROLES.ADMIN), 
+  attendanceController.getSubjectAttendance
+);
+
+// GET /api/attendance/subject/:subjectId - Get subject attendance records (without section, for backward compatibility)
+router.get('/subject/:subjectId', 
   protect, 
   authorize(ROLES.STAFF, ROLES.HOD, ROLES.ADMIN), 
   attendanceController.getSubjectAttendance

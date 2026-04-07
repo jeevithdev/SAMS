@@ -61,11 +61,11 @@ const handleValidation = (req, res, next) => {
 router.post('/',
   protect,
   authorize(ROLES.STUDENT),
-  upload.single('certificate'),
+  upload.array('certificates', 5), // Support up to 5 certificate files
   [
     body('category').notEmpty().withMessage('Category is required'),
     body('title').trim().notEmpty().withMessage('Title is required'),
-    body('activityDate').isISO8601().withMessage('Valid activity date is required')
+    body('date').isISO8601().withMessage('Valid activity date is required')
   ],
   handleValidation,
   activityController.submitActivity
@@ -73,6 +73,9 @@ router.post('/',
 
 // GET /api/activities/my-activities - Get student's activities (Student)
 router.get('/my-activities', protect, authorize(ROLES.STUDENT), activityController.getMyActivities);
+
+// GET /api/activities/my-portfolio - Get current student's portfolio (Student)
+router.get('/my-portfolio', protect, authorize(ROLES.STUDENT), activityController.getMyPortfolio);
 
 // GET /api/activities/pending-verification - Get pending activities for mentor (Staff, HOD)
 router.get('/pending-verification', protect, authorize(ROLES.STAFF, ROLES.HOD), activityController.getPendingVerification);

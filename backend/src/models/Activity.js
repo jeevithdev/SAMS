@@ -21,13 +21,21 @@ const activitySchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  activityDate: {
+  date: {
     type: Date,
     required: [true, 'Activity date is required']
   },
-  certificateFile: {
-    type: String // File path
+  duration: {
+    type: String, // e.g., "3 days", "1 week"
+    trim: true
   },
+  organizer: {
+    type: String,
+    trim: true
+  },
+  certificates: [{
+    type: String // File paths
+  }],
   
   // Verification
   status: {

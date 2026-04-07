@@ -5,11 +5,47 @@ const { ROLES } = require('../config/constants');
 /**
  * Register a new user
  * @route POST /api/auth/register
- * @access Admin only
+ * @access Admin (HOD only), HOD (staff/students in dept)
  */
 exports.register = async (req, res, next) => {
   try {
     const { email, password, name, role, department, studentFields, staffFields } = req.body;
+    
+    // RBAC: Admin can only create HODs
+    if (req.user.role === ROLES.ADMIN) {
+      if (role !== ROLES.HOD) {
+        return res.status(403).json({
+          success: false,
+          message: 'Admin can only create HOD users'
+        });
+      }
+      // Department is required for HODs
+      if (!department) {
+        return res.status(400).json({
+          success: false,
+          message: 'Department is required for HOD users'
+        });
+      }
+    }
+    
+    // RBAC: HOD can only create staff/students in their own department
+    if (req.user.role === ROLES.HOD) {
+      // Cannot create HODs or admins
+      if ([ROLES.ADMIN, ROLES.HOD].includes(role)) {
+        return res.status(403).json({
+          success: false,
+          message: 'HOD cannot create administrators or other HODs'
+        });
+      }
+      
+      // Must be in HOD's department
+      if (!department || department !== req.user.department.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: 'HOD can only create users in their own department'
+        });
+      }
+    }
     
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -38,6 +74,9 @@ exports.register = async (req, res, next) => {
     }
     
     const user = await User.create(userData);
+    
+    // Populate department for response
+    await user.populate('department', 'name code');
     
     res.status(201).json({
       success: true,

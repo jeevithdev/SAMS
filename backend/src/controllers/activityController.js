@@ -11,14 +11,16 @@ const { ROLES } = require('../config/constants');
  */
 exports.submitActivity = async (req, res, next) => {
   try {
-    const { category, title, description, activityDate } = req.body;
+    const { category, title, description, date, duration, organizer } = req.body;
     
     // Check if student has a mentor assigned
     const student = await User.findById(req.user._id);
     if (!student.studentFields?.mentor) {
-      // Clean up uploaded file if present
-      if (req.file) {
-        fs.unlinkSync(req.file.path);
+      // Clean up uploaded files if present
+      if (req.files && req.files.length > 0) {
+        req.files.forEach(file => {
+          try { fs.unlinkSync(file.path); } catch (e) {}
+        });
       }
       return res.status(400).json({
         success: false,
@@ -26,13 +28,18 @@ exports.submitActivity = async (req, res, next) => {
       });
     }
     
+    // Handle multiple certificate files
+    const certificates = req.files ? req.files.map(file => file.path) : [];
+    
     const activity = await Activity.create({
       student: req.user._id,
       category,
       title,
       description,
-      activityDate,
-      certificateFile: req.file ? req.file.path : null,
+      date: date || new Date(),
+      duration,
+      organizer,
+      certificates,
       status: ACTIVITY_STATUS.PENDING
     });
     
@@ -46,9 +53,11 @@ exports.submitActivity = async (req, res, next) => {
       data: populatedActivity
     });
   } catch (error) {
-    // Clean up uploaded file on error
-    if (req.file) {
-      fs.unlinkSync(req.file.path);
+    // Clean up uploaded files on error
+    if (req.files && req.files.length > 0) {
+      req.files.forEach(file => {
+        try { fs.unlinkSync(file.path); } catch (e) {}
+      });
     }
     next(error);
   }
@@ -450,6 +459,33 @@ exports.getActivityById = async (req, res, next) => {
     res.json({
       success: true,
       data: activity
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get current student's portfolio (verified activities)
+ * @route GET /api/activities/my-portfolio
+ * @access Student
+ */
+exports.getMyPortfolio = async (req, res, next) => {
+  try {
+    const Activity = require('../models/Activity');
+    const { ACTIVITY_STATUS } = require('../config/constants');
+    
+    const activities = await Activity.find({
+      student: req.user._id,
+      status: ACTIVITY_STATUS.VERIFIED
+    })
+    .populate('category', 'name')
+    .sort({ activityDate: -1 });
+    
+    res.json({
+      success: true,
+      count: activities.length,
+      data: activities
     });
   } catch (error) {
     next(error);

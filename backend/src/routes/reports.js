@@ -5,6 +5,9 @@ const reportController = require('../controllers/reportController');
 
 const router = express.Router();
 
+// GET /api/reports/generate - Generate reports (Admin, HOD)
+router.get('/generate', protect, authorize(ROLES.ADMIN, ROLES.HOD), reportController.generateReport);
+
 // GET /api/reports/student-unified/:studentId - Unified student profile (Self, Mentor, HOD, Admin)
 router.get('/student-unified/:studentId', 
   protect, 

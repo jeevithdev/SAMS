@@ -494,3 +494,91 @@ exports.exportReport = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Generate various reports
+ * @route GET /api/reports/generate
+ * @access Admin, HOD
+ */
+exports.generateReport = async (req, res, next) => {
+  try {
+    const { type, startDate, endDate, format } = req.query;
+    const User = require('../models/User');
+    const Activity = require('../models/Activity');
+    const AttendanceRecord = require('../models/AttendanceRecord');
+    const MarksRecord = require('../models/MarksRecord');
+    const { ACTIVITY_STATUS, ROLES } = require('../config/constants');
+    
+    let data = [];
+    const dateFilter = {};
+    if (startDate) dateFilter.$gte = new Date(startDate);
+    if (endDate) dateFilter.$lte = new Date(endDate);
+    
+    switch (type) {
+      case 'activities':
+        const activities = await Activity.find({
+          status: ACTIVITY_STATUS.VERIFIED,
+          ...(startDate || endDate ? { activityDate: dateFilter } : {})
+        })
+        .populate('student', 'name email registrationNumber')
+        .populate('category', 'name');
+        
+        data = activities.map(a => ({
+          studentName: a.student?.name,
+          regNo: a.student?.registrationNumber,
+          activityTitle: a.title,
+          category: a.category?.name,
+          date: a.activityDate?.toISOString().split('T')[0],
+          description: a.description
+        }));
+        break;
+        
+      case 'attendance':
+        const students = await User.find({ role: ROLES.STUDENT }).select('name registrationNumber');
+        data = students.map(s => ({
+          name: s.name,
+          regNo: s.registrationNumber,
+          percentage: 'N/A' // Would need to calculate
+        }));
+        break;
+        
+      case 'marks':
+        const marksRecords = await MarksRecord.find({})
+          .populate('student', 'name registrationNumber')
+          .populate('subject', 'name code');
+        
+        data = marksRecords.map(m => ({
+          studentName: m.student?.name,
+          regNo: m.student?.registrationNumber,
+          subject: m.subject?.name,
+          total: m.totalMarks,
+          percentage: ((m.totalMarks || 0) / 120 * 100).toFixed(1)
+        }));
+        break;
+        
+      case 'defaulters':
+        // Return students with low attendance - simplified
+        data = [];
+        break;
+        
+      case 'comprehensive':
+        // Return combined report
+        const allActivities = await Activity.find({ status: ACTIVITY_STATUS.VERIFIED }).count();
+        const allStudents = await User.find({ role: ROLES.STUDENT }).count();
+        data = [{ totalStudents: allStudents, totalVerifiedActivities: allActivities }];
+        break;
+        
+      default:
+        return res.status(400).json({ success: false, message: 'Invalid report type' });
+    }
+    
+    res.json({
+      success: true,
+      type,
+      count: data.length,
+      data
+    });
+  } catch (error) {
+    next(error);
+  }
+};

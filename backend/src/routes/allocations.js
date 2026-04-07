@@ -37,6 +37,9 @@ router.get('/', protect, authorize(ROLES.ADMIN, ROLES.HOD), allocationController
 // GET /api/allocations/my-allocations - Get staff's allocations (Staff, HOD)
 router.get('/my-allocations', protect, authorize(ROLES.STAFF, ROLES.HOD), allocationController.getMyAllocations);
 
+// GET /api/allocations/my - Alias for my-allocations (Staff, HOD)
+router.get('/my', protect, authorize(ROLES.STAFF, ROLES.HOD), allocationController.getMyAllocations);
+
 // DELETE /api/allocations/:id - Remove allocation (Admin)
 router.delete('/:id', protect, authorize(ROLES.ADMIN), allocationController.deleteAllocation);
 

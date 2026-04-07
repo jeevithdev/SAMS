@@ -18,6 +18,30 @@ const handleValidation = (req, res, next) => {
   next();
 };
 
+// GET /api/marks/my - Get current student's marks
+router.get('/my', protect, authorize(ROLES.STUDENT), marksController.getMyMarks);
+
+// GET /api/marks/my/consolidated - Get current student's consolidated marks
+router.get('/my/consolidated', protect, authorize(ROLES.STUDENT), marksController.getMyConsolidatedMarks);
+
+// GET /api/marks/report - Get marks report (Staff, HOD, Admin)
+router.get('/report', protect, authorize(ROLES.STAFF, ROLES.HOD, ROLES.ADMIN), marksController.getMarksReport);
+
+// POST /api/marks/enter - Enter marks in batch (Staff with allocation)
+router.post('/enter',
+  protect,
+  authorize(ROLES.STAFF, ROLES.HOD),
+  [
+    body('subject').notEmpty().withMessage('Subject is required'),
+    body('type').notEmpty().withMessage('Mark type is required'),
+    body('records').isArray({ min: 1 }).withMessage('Records are required'),
+    body('records.*.student').notEmpty().withMessage('Student ID is required'),
+    body('records.*.marks').isNumeric().withMessage('Marks must be a number')
+  ],
+  handleValidation,
+  marksController.enterMarksBatch
+);
+
 // POST /api/marks - Enter marks (Staff with allocation)
 router.post('/',
   protect,

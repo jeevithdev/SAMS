@@ -511,3 +511,219 @@ exports.getInstitutionSummary = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Get current student's marks
+ * @route GET /api/marks/my
+ * @access Student
+ */
+exports.getMyMarks = async (req, res, next) => {
+  try {
+    const settings = await InstitutionSettings.getSettings();
+    
+    const records = await MarksRecord.find({
+      student: req.user._id,
+      academicYear: settings.currentAcademicYear
+    }).populate('subject', 'name code credits');
+    
+    // Group by subject
+    const bySubject = records.map(record => ({
+      _id: record._id,
+      subject: record.subject,
+      cia1: { marks: record.ciaMarks?.[0] || null, maxMarks: settings.marksConfig?.ciaMaxMarks || 25 },
+      cia2: { marks: record.ciaMarks?.[1] || null, maxMarks: settings.marksConfig?.ciaMaxMarks || 25 },
+      cia3: { marks: record.ciaMarks?.[2] || null, maxMarks: settings.marksConfig?.ciaMaxMarks || 25 },
+      assignment: { marks: record.assignmentMarks, maxMarks: settings.marksConfig?.assignmentMaxMarks || 10 },
+      lab: { marks: record.labMarks, maxMarks: settings.marksConfig?.labMaxMarks || 25 },
+      attendance: { marks: record.attendanceMarks, maxMarks: settings.marksConfig?.attendanceMaxMarks || 10 },
+      total: record.totalMarks
+    }));
+    
+    res.json({
+      success: true,
+      data: bySubject
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get current student's consolidated marks
+ * @route GET /api/marks/my/consolidated
+ * @access Student
+ */
+exports.getMyConsolidatedMarks = async (req, res, next) => {
+  try {
+    const settings = await InstitutionSettings.getSettings();
+    
+    const records = await MarksRecord.find({
+      student: req.user._id,
+      academicYear: settings.currentAcademicYear
+    }).populate('subject', 'name code credits');
+    
+    const consolidated = records.map(record => {
+      const maxTotal = 
+        (settings.marksConfig?.ciaMaxMarks || 25) * 3 +
+        (settings.marksConfig?.assignmentMaxMarks || 10) +
+        (settings.marksConfig?.labMaxMarks || 25) +
+        (settings.marksConfig?.attendanceMaxMarks || 10);
+      
+      return {
+        subject: record.subject,
+        total: record.totalMarks || 0,
+        maxTotal,
+        percentage: maxTotal > 0 ? ((record.totalMarks || 0) / maxTotal) * 100 : 0
+      };
+    });
+    
+    res.json({
+      success: true,
+      data: consolidated
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Enter marks in batch for multiple students
+ * @route POST /api/marks/enter
+ * @access Staff, HOD
+ */
+exports.enterMarksBatch = async (req, res, next) => {
+  try {
+    const { subject, type, maxMarks, records } = req.body;
+    
+    const settings = await InstitutionSettings.getSettings();
+    
+    // Verify staff is allocated to this subject
+    if (req.user.role === ROLES.STAFF) {
+      const allocation = await SubjectAllocation.findOne({
+        faculty: req.user._id,
+        subject,
+        academicYear: settings.currentAcademicYear,
+        isActive: true
+      });
+      
+      if (!allocation) {
+        return res.status(403).json({
+          success: false,
+          message: 'You are not allocated to this subject'
+        });
+      }
+    }
+    
+    const results = [];
+    
+    for (const item of records) {
+      const { student, marks } = item;
+      
+      // Find or create marks record
+      let record = await MarksRecord.findOne({
+        student,
+        subject,
+        academicYear: settings.currentAcademicYear
+      });
+      
+      if (!record) {
+        record = new MarksRecord({
+          student,
+          subject,
+          academicYear: settings.currentAcademicYear,
+          enteredBy: req.user._id
+        });
+      }
+      
+      // Update specific mark type
+      switch (type) {
+        case 'cia1':
+          if (!record.ciaMarks) record.ciaMarks = [];
+          record.ciaMarks[0] = marks;
+          break;
+        case 'cia2':
+          if (!record.ciaMarks) record.ciaMarks = [];
+          record.ciaMarks[1] = marks;
+          break;
+        case 'cia3':
+          if (!record.ciaMarks) record.ciaMarks = [];
+          record.ciaMarks[2] = marks;
+          break;
+        case 'assignment':
+          record.assignmentMarks = marks;
+          break;
+        case 'lab':
+          record.labMarks = marks;
+          break;
+        case 'attendance':
+          record.attendanceMarks = marks;
+          break;
+      }
+      
+      await record.save();
+      results.push(record);
+    }
+    
+    res.json({
+      success: true,
+      message: `Marks saved for ${results.length} student(s)`,
+      data: results
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get marks report
+ * @route GET /api/marks/report
+ * @access Staff, HOD, Admin
+ */
+exports.getMarksReport = async (req, res, next) => {
+  try {
+    const { subject, program, semester, section } = req.query;
+    const settings = await InstitutionSettings.getSettings();
+    
+    const query = { academicYear: settings.currentAcademicYear };
+    
+    if (subject) query.subject = subject;
+    
+    const records = await MarksRecord.find(query)
+      .populate('student', 'name email registrationNumber section semester')
+      .populate('subject', 'name code')
+      .sort('student.name');
+    
+    // Filter by program/semester/section if needed
+    let filtered = records;
+    if (program || semester || section) {
+      const studentQuery = { role: ROLES.STUDENT };
+      if (program) studentQuery.program = program;
+      if (semester) studentQuery.semester = parseInt(semester);
+      if (section) studentQuery.section = section.toUpperCase();
+      
+      const validStudents = await User.find(studentQuery).select('_id');
+      const validIds = validStudents.map(s => s._id.toString());
+      filtered = records.filter(r => validIds.includes(r.student?._id?.toString()));
+    }
+    
+    const report = filtered.map(record => ({
+      student: record.student,
+      subject: record.subject,
+      cia1: { marks: record.ciaMarks?.[0] || null },
+      cia2: { marks: record.ciaMarks?.[1] || null },
+      cia3: { marks: record.ciaMarks?.[2] || null },
+      assignment: { marks: record.assignmentMarks },
+      lab: { marks: record.labMarks },
+      attendance: { marks: record.attendanceMarks },
+      total: record.totalMarks || 0,
+      percentage: record.totalMarks ? (record.totalMarks / 120) * 100 : 0
+    }));
+    
+    res.json({
+      success: true,
+      data: report
+    });
+  } catch (error) {
+    next(error);
+  }
+};
