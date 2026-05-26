@@ -95,22 +95,31 @@ exports.listAllocations = async (req, res, next) => {
       .populate({
         path: 'subject',
         populate: { path: 'program', select: 'name code department' }
-      })
-      .sort({ 'subject.semester': 1 });
+      });
     
     // HOD: filter to their department only
     if (req.user.role === ROLES.HOD && req.user.department) {
-      allocations = allocations.filter(a => 
-        a.subject.program.department.toString() === req.user.department._id.toString()
-      );
+      allocations = allocations.filter(a => {
+        const programDept = a.subject?.program?.department;
+        const userDept = req.user.department._id || req.user.department;
+        return programDept?.toString() === userDept.toString();
+      });
     }
     
     // Filter by department if specified
     if (department) {
-      allocations = allocations.filter(a => 
-        a.subject.program.department.toString() === department
-      );
+      allocations = allocations.filter(a => {
+        const programDept = a.subject?.program?.department;
+        return programDept?.toString() === department;
+      });
     }
+
+    // Sort by subject semester
+    allocations.sort((a, b) => {
+      const semA = a.subject?.semester || 0;
+      const semB = b.subject?.semester || 0;
+      return semA - semB;
+    });
     
     res.json({
       success: true,

@@ -59,4 +59,6 @@ const generateToken = (userId) => {
   );
 };
 
-module.exports = { protect, generateToken };
+const { authorize, authorizeOwnerOrRoles } = require('./rbac');
+
+module.exports = { protect, generateToken, authorize, authorizeOwnerOrRoles };

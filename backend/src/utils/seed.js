@@ -19,7 +19,8 @@ const ActivityCategory = require('../models/ActivityCategory');
 const InstitutionSettings = require('../models/InstitutionSettings');
 
 const { ROLES } = require('../config/constants');
-
+const dns = require("dns");
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 const seedDatabase = async () => {
   try {
     // Connect to MongoDB

@@ -256,8 +256,20 @@ exports.getStaffDashboard = async (req, res, next) => {
  */
 exports.getHodDashboard = async (req, res, next) => {
   try {
-    const departmentId = req.user.department._id;
+    // Get department ID (handle both populated object and ID string)
+    const departmentId = req.user.department?._id || req.user.department;
+    
+    if (!departmentId) {
+      return res.status(400).json({
+        success: false,
+        message: 'HOD department not assigned'
+      });
+    }
+    
     const settings = await InstitutionSettings.getSettings();
+    
+    // Ensure user object has department details
+    const hodUser = await User.findById(req.user._id).populate('department', 'name');
     
     // Department students
     const students = await User.find({
@@ -328,30 +340,47 @@ exports.getHodDashboard = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .limit(10);
     
+    // Programs with student counts
+    const Program = require('../models/Program');
+    const departmentPrograms = await Program.find({
+      department: departmentId,
+      isActive: true
+    });
+    
+    const programsWithCounts = await Promise.all(
+      departmentPrograms.map(async (program) => {
+        const studentCount = await User.countDocuments({
+          role: ROLES.STUDENT,
+          'studentFields.program': program._id,
+          isActive: true
+        });
+        return {
+          _id: program._id,
+          name: program.name,
+          code: program.code,
+          studentCount
+        };
+      })
+    );
+    
     res.json({
       success: true,
       data: {
-        department: {
-          _id: departmentId,
-          name: req.user.department.name
+        user: {
+          name: hodUser.name,
+          department: hodUser.department?.name || 'Unknown Department'
         },
-        students: {
-          total: students.length,
-          defaulterCount,
-          averageAttendance: studentsWithAttendance > 0 
-            ? Math.round((totalAttendanceSum / studentsWithAttendance) * 100) / 100 
-            : 0
-        },
-        staff: {
-          count: staffCount
-        },
-        activities: {
-          total: totalActivities,
-          pending: pendingActivities,
-          verified: verifiedActivities,
-          recent: recentActivities
-        },
-        threshold: settings.defaulterThreshold
+        totalStudents: students.length,
+        totalFaculty: staffCount,
+        totalActivities,
+        pendingActivities,
+        verifiedActivities,
+        defaulters: defaulterCount,
+        averageAttendance: studentsWithAttendance > 0 
+          ? Math.round((totalAttendanceSum / studentsWithAttendance) * 100) / 100 
+          : 0,
+        programs: programsWithCounts,
+        recentActivities
       }
     });
   } catch (error) {
@@ -417,36 +446,21 @@ exports.getAdminDashboard = async (req, res, next) => {
     res.json({
       success: true,
       data: {
-        users: {
-          total: studentCount + staffCount + hodCount + adminCount,
-          students: studentCount,
-          staff: staffCount,
-          hod: hodCount,
-          admin: adminCount,
-          recent: recentUsers
-        },
-        institution: {
-          departments: departmentCount,
-          subjects: subjectCount,
-          name: settings.institutionName,
-          academicYear: settings.currentAcademicYear
-        },
-        activities: {
-          total: totalActivities,
-          pending: pendingActivities,
-          verified: verifiedActivities
-        },
-        attendance: {
-          sessionsThisMonth
-        },
-        alerts: {
-          studentsWithoutMentor,
-          pendingVerifications: pendingActivities
-        },
-        settings: {
-          defaulterThreshold: settings.defaulterThreshold,
-          attendanceEditWindow: settings.attendanceEditWindowHours
-        }
+        totalUsers: studentCount + staffCount + hodCount + adminCount,
+        totalStudents: studentCount,
+        totalStaff: staffCount,
+        totalHOD: hodCount,
+        totalAdmin: adminCount,
+        totalDepartments: departmentCount,
+        totalSubjects: subjectCount,
+        institutionName: settings.institutionName,
+        currentAcademicYear: settings.currentAcademicYear,
+        totalActivities,
+        pendingActivities,
+        verifiedActivities,
+        sessionsThisMonth,
+        studentsWithoutMentor,
+        recentUsers
       }
     });
   } catch (error) {
