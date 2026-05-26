@@ -3,6 +3,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        mono: ['Geist Mono', 'monospace'],
+      },
       colors: {
         primary: {
           50: '#eff6ff',

@@ -17,9 +17,7 @@ import AdminDashboard from './pages/dashboards/AdminDashboard';
 // Admin pages
 import UsersManagement from './pages/admin/UsersManagement';
 import DepartmentsManagement from './pages/admin/DepartmentsManagement';
-import ProgramsManagement from './pages/admin/ProgramsManagement';
 import SubjectsManagement from './pages/admin/SubjectsManagement';
-import AllocationsManagement from './pages/admin/AllocationsManagement';
 import ActivityCategoriesManagement from './pages/admin/ActivityCategoriesManagement';
 import Settings from './pages/admin/Settings';
 
@@ -118,10 +116,8 @@ function App() {
                 <Route path="users" element={<ProtectedRoute roles={['admin']}><UsersManagement /></ProtectedRoute>} />
                 <Route path="hods" element={<ProtectedRoute roles={['admin']}><UsersManagement userType="hod" /></ProtectedRoute>} />
                 <Route path="departments" element={<ProtectedRoute roles={['admin']}><DepartmentsManagement /></ProtectedRoute>} />
-                <Route path="programs" element={<ProtectedRoute roles={['admin']}><ProgramsManagement /></ProtectedRoute>} />
                 <Route path="subjects" element={<ProtectedRoute roles={['admin']}><SubjectsManagement /></ProtectedRoute>} />
                 <Route path="subject-requests" element={<ProtectedRoute roles={['admin']}><SubjectRequestsManagement /></ProtectedRoute>} />
-                <Route path="allocations" element={<ProtectedRoute roles={['admin']}><AllocationsManagement /></ProtectedRoute>} />
                 <Route path="activity-categories" element={<ProtectedRoute roles={['admin']}><ActivityCategoriesManagement /></ProtectedRoute>} />
                 <Route path="settings" element={<ProtectedRoute roles={['admin']}><Settings /></ProtectedRoute>} />
               </Route>

@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 import {
   UserGroupIcon,
   BuildingOfficeIcon,
-  AcademicCapIcon,
   BookOpenIcon,
   DocumentCheckIcon,
   ChartBarIcon,
@@ -60,13 +59,6 @@ export default function AdminDashboard() {
       icon: BuildingOfficeIcon,
       color: 'bg-purple-500',
       link: '/admin/departments',
-    },
-    {
-      title: 'Programs',
-      value: stats?.totalPrograms || 0,
-      icon: AcademicCapIcon,
-      color: 'bg-green-500',
-      link: '/admin/programs',
     },
     {
       title: 'Subjects',

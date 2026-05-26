@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-50 text-gray-900 antialiased;
+  @apply bg-gray-50 text-gray-900 antialiased font-mono;
+  font-family: 'Geist Mono', monospace;
 }
 
 /* Custom scrollbar */
