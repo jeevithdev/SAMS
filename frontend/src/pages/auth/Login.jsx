@@ -37,16 +37,6 @@ export default function Login() {
     }
   };
 
-  const fillDemo = (role) => {
-    const creds = {
-      admin: { email: 'admin@sams.edu', password: 'admin123' },
-      student: { email: 'student1@sams.edu', password: 'student123' },
-      staff: { email: 'staff1@sams.edu', password: 'staff123' },
-      hod: { email: 'hod.cse@sams.edu', password: 'hod123' },
-    };
-    setEmail(creds[role].email);
-    setPassword(creds[role].password);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4">
@@ -137,22 +127,6 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Demo Credentials - Quick Fill */}
-        <div className="mt-4 sm:mt-6 bg-white/60 backdrop-blur rounded-lg p-3 sm:p-4">
-          <p className="font-semibold text-xs sm:text-sm text-gray-700 mb-2 sm:mb-3 text-center">Quick Login (Demo)</p>
-          <div className="grid grid-cols-4 gap-2">
-            {['admin', 'hod', 'staff', 'student'].map((role) => (
-              <button
-                key={role}
-                type="button"
-                onClick={() => fillDemo(role)}
-                className="px-2 py-1.5 sm:py-2 text-xs font-medium bg-white rounded-lg border border-gray-200 hover:bg-primary-50 hover:border-primary-300 transition capitalize"
-              >
-                {role}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Footer */}
         <p className="mt-4 text-center text-xs text-gray-500">
