@@ -24,3 +24,46 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-400;
 }
+
+/* ── Login page utilities ── */
+.login-bg-mesh {
+  background-color: #faf8ff;
+  background-image:
+    radial-gradient(rgba(173, 199, 247, 0.6) 1.5px, transparent 1.5px),
+    radial-gradient(at 0% 0%, hsla(217, 100%, 95%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(181, 69%, 92%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(217, 100%, 95%, 1) 0, transparent 50%);
+  background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%;
+}
+
+.login-glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Entrance animation */
+@keyframes login-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-animate-in {
+  animation: login-fade-up 0.6s ease-out forwards;
+}
+
+.login-animate-in-delay {
+  animation: login-fade-up 0.6s ease-out 0.15s forwards;
+  opacity: 0;
+}
+
+.login-animate-in-delay-2 {
+  animation: login-fade-up 0.6s ease-out 0.3s forwards;
+  opacity: 0;
+}
