@@ -51,26 +51,26 @@ export default function StudentDashboard() {
       title: 'Total Activities',
       value: stats?.activities?.total || 0,
       icon: DocumentCheckIcon,
-      color: 'bg-blue-500',
+      color: 'bg-[#002045]',
       link: '/student/activities',
     },
     {
       title: 'Verified',
       value: stats?.activities?.verified || 0,
       icon: CheckCircleIcon,
-      color: 'bg-green-500',
+      color: 'bg-[#1a4971]',
     },
     {
       title: 'Pending',
       value: stats?.activities?.pending || 0,
       icon: ClockIcon,
-      color: 'bg-yellow-500',
+      color: 'bg-[#3d6b99]',
     },
     {
       title: 'Rejected',
       value: stats?.activities?.rejected || 0,
       icon: XCircleIcon,
-      color: 'bg-red-500',
+      color: 'bg-[#6b8bad]',
     },
   ];
 

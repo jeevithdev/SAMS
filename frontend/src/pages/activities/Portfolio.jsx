@@ -49,23 +49,23 @@ export default function Portfolio() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl p-6 text-white">
+      <div className="bg-gradient-to-r from-[#002045] to-[#0a2e61] rounded-xl p-6 text-white">
         <div className="flex items-center gap-4">
           <div className="bg-white/20 p-4 rounded-xl">
             <TrophyIcon className="h-8 w-8" />
           </div>
           <div>
             <h1 className="text-2xl font-bold">{user?.name}'s Portfolio</h1>
-            <p className="text-green-100">Verified Activities & Achievements</p>
+            <p className="text-blue-100/80">Verified Activities & Achievements</p>
           </div>
         </div>
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white/10 rounded-lg p-3">
-            <p className="text-sm text-green-100">Total Activities</p>
+            <p className="text-sm text-blue-100/80">Total Activities</p>
             <p className="text-2xl font-bold">{activities.length}</p>
           </div>
           <div className="bg-white/10 rounded-lg p-3">
-            <p className="text-sm text-green-100">Categories</p>
+            <p className="text-sm text-blue-100/80">Categories</p>
             <p className="text-2xl font-bold">{Object.keys(groupedByCategory).length}</p>
           </div>
         </div>

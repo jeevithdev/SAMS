@@ -48,9 +48,9 @@ export default function HODDashboard() {
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Welcome */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-[#002045] to-[#0a2e61] rounded-xl p-4 sm:p-6 text-white">
         <h1 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Welcome, {stats?.user?.name}!</h1>
-        <p className="text-purple-100 text-sm sm:text-base">Head of Department - {stats?.user?.department}</p>
+        <p className="text-blue-100/80 text-sm sm:text-base">Head of Department - {stats?.user?.department}</p>
       </div>
 
       {/* Stats Grid */}
@@ -61,7 +61,7 @@ export default function HODDashboard() {
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Students</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats?.totalStudents || 0}</p>
             </div>
-            <div className="bg-blue-500 p-2 sm:p-3 rounded-lg flex-shrink-0">
+            <div className="bg-[#002045] p-2 sm:p-3 rounded-lg flex-shrink-0">
               <UserGroupIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function HODDashboard() {
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Faculty</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats?.totalFaculty || 0}</p>
             </div>
-            <div className="bg-green-500 p-2 sm:p-3 rounded-lg flex-shrink-0">
+            <div className="bg-[#1a4971] p-2 sm:p-3 rounded-lg flex-shrink-0">
               <AcademicCapIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function HODDashboard() {
           {stats?.defaulters > 0 && (
             <Link
               to="/hod/defaulters"
-              className="text-xs sm:text-sm text-red-600 hover:text-red-700 font-medium mt-2 sm:mt-3 inline-block"
+              className="text-xs sm:text-sm text-primary-600 hover:text-primary-700 font-medium mt-2 sm:mt-3 inline-block"
             >
               View →
             </Link>
@@ -107,7 +107,7 @@ export default function HODDashboard() {
                 {stats?.averageAttendance?.toFixed(1) || 0}%
               </p>
             </div>
-            <div className="bg-purple-500 p-2 sm:p-3 rounded-lg flex-shrink-0">
+            <div className="bg-[#3d6b99] p-2 sm:p-3 rounded-lg flex-shrink-0">
               <ChartBarIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
           </div>

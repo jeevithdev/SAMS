@@ -72,10 +72,10 @@ export default function Layout() {
   const navItems = navigation[user?.role] || [];
 
   const roleColors = {
-    admin: 'bg-red-600',
-    hod: 'bg-purple-600',
-    staff: 'bg-blue-600',
-    student: 'bg-green-600',
+    admin: 'bg-[#1a4971]',
+    hod: 'bg-[#3d6b99]',
+    staff: 'bg-[#6b8bad]',
+    student: 'bg-[#455f88]',
   };
 
   return (
@@ -90,19 +90,20 @@ export default function Layout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 shadow-lg transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
+        style={{ backgroundColor: '#002045' }}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-4 border-b">
+          <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
             <Link to="/" className="flex items-center space-x-2">
-              <AcademicCapIcon className="h-8 w-8 text-primary-600" />
-              <span className="text-xl font-bold text-gray-900">SAMS</span>
+              <AcademicCapIcon className="h-8 w-8 text-white/80" />
+              <span className="text-xl font-bold text-white tracking-widest uppercase">SAMS</span>
             </Link>
             <button
-              className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+              className="lg:hidden p-2 rounded-md hover:bg-white/10 text-white/70"
               onClick={() => setSidebarOpen(false)}
             >
               <XMarkIcon className="h-6 w-6" />
@@ -110,16 +111,16 @@ export default function Layout() {
           </div>
 
           {/* User info */}
-          <div className="px-4 py-4 border-b">
+          <div className="px-4 py-4 border-b border-white/10">
             <div className="flex items-center space-x-3">
-              <div className={`h-10 w-10 rounded-full ${roleColors[user?.role]} flex items-center justify-center`}>
+              <div className={`h-10 w-10 rounded-full ${roleColors[user?.role]} flex items-center justify-center ring-2 ring-white/20`}>
                 <span className="text-white font-medium text-sm">
                   {user?.name?.charAt(0)?.toUpperCase()}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                <p className="text-sm font-medium text-white truncate">{user?.name}</p>
+                <p className="text-xs text-blue-200/70 capitalize">{user?.role}</p>
               </div>
             </div>
           </div>
@@ -135,11 +136,11 @@ export default function Layout() {
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                     isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-white/15 text-white'
+                      : 'text-blue-100/70 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  <item.icon className={`h-5 w-5 mr-3 ${isActive ? 'text-primary-600' : 'text-gray-400'}`} />
+                  <item.icon className={`h-5 w-5 mr-3 ${isActive ? 'text-white' : 'text-blue-200/50'}`} />
                   {item.name}
                 </Link>
               );
@@ -147,12 +148,12 @@ export default function Layout() {
           </nav>
 
           {/* Logout */}
-          <div className="p-4 border-t">
+          <div className="p-4 border-t border-white/10">
             <button
               onClick={handleLogout}
-              className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center w-full px-3 py-2 text-sm font-medium text-blue-100/70 rounded-lg hover:bg-white/10 hover:text-white transition-colors"
             >
-              <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3 text-gray-400" />
+              <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3 text-blue-200/50" />
               Logout
             </button>
           </div>
@@ -162,14 +163,14 @@ export default function Layout() {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 h-16 bg-white border-b flex items-center px-4 lg:px-6">
+        <header className="sticky top-0 z-30 h-16 bg-white border-b border-gray-200 flex items-center px-4 lg:px-6">
           <button
             className="lg:hidden p-2 rounded-md hover:bg-gray-100 mr-4"
             onClick={() => setSidebarOpen(true)}
           >
-            <Bars3Icon className="h-6 w-6" />
+            <Bars3Icon className="h-6 w-6 text-[#002045]" />
           </button>
-          <h1 className="text-lg font-semibold text-gray-900">
+          <h1 className="text-lg font-semibold" style={{ color: '#002045' }}>
             {navItems.find((item) => item.href === location.pathname)?.name || 'SAMS'}
           </h1>
         </header>

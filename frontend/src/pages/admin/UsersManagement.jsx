@@ -184,10 +184,10 @@ export default function UsersManagement({ userType }) {
   );
 
   const roleColors = {
-    admin: 'bg-red-100 text-red-700',
-    hod: 'bg-purple-100 text-purple-700',
-    staff: 'bg-blue-100 text-blue-700',
-    student: 'bg-green-100 text-green-700',
+    admin: 'bg-primary-100 text-primary-700',
+    hod: 'bg-primary-100 text-primary-600',
+    staff: 'bg-primary-50 text-primary-600',
+    student: 'bg-primary-50 text-primary-500',
   };
 
   // For HOD, get department name

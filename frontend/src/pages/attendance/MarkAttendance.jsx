@@ -81,7 +81,7 @@ export default function MarkAttendance() {
     present: 'bg-green-100 text-green-700 border-green-300',
     absent: 'bg-red-100 text-red-700 border-red-300',
     late: 'bg-yellow-100 text-yellow-700 border-yellow-300',
-    od: 'bg-blue-100 text-blue-700 border-blue-300',
+    od: 'bg-primary-50 text-primary-700 border-primary-300',
   };
 
   const statusIcons = {
@@ -163,7 +163,7 @@ export default function MarkAttendance() {
                 <span className="text-yellow-600 flex items-center gap-1">
                   <span className="hidden sm:inline">Late:</span> {Object.values(attendance).filter(s => s === 'late').length}
                 </span>
-                <span className="text-blue-600 flex items-center gap-1">
+                <span className="text-primary-600 flex items-center gap-1">
                   <span className="hidden sm:inline">OD:</span> {Object.values(attendance).filter(s => s === 'od').length}
                 </span>
               </div>

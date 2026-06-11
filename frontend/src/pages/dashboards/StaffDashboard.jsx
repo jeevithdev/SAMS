@@ -52,9 +52,9 @@ export default function StaffDashboard() {
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Welcome */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-[#002045] to-[#0a2e61] rounded-xl p-4 sm:p-6 text-white">
         <h1 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Staff Dashboard</h1>
-        <p className="text-blue-100 text-sm sm:text-base">Manage your subjects, attendance, and mentees</p>
+        <p className="text-blue-100/80 text-sm sm:text-base">Manage your subjects, attendance, and mentees</p>
       </div>
 
       {/* Stats Grid */}
@@ -65,7 +65,7 @@ export default function StaffDashboard() {
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Subjects</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats?.allocations?.count || 0}</p>
             </div>
-            <div className="bg-blue-500 p-2 sm:p-3 rounded-lg flex-shrink-0">
+            <div className="bg-[#002045] p-2 sm:p-3 rounded-lg flex-shrink-0">
               <BookOpenIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
           </div>
@@ -77,7 +77,7 @@ export default function StaffDashboard() {
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Mentees</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats?.mentees?.count || 0}</p>
             </div>
-            <div className="bg-green-500 p-2 sm:p-3 rounded-lg flex-shrink-0">
+            <div className="bg-[#1a4971] p-2 sm:p-3 rounded-lg flex-shrink-0">
               <UserGroupIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function StaffDashboard() {
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Pending</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats?.mentees?.pendingVerifications || 0}</p>
             </div>
-            <div className="bg-yellow-500 p-2 sm:p-3 rounded-lg flex-shrink-0">
+            <div className="bg-[#3d6b99] p-2 sm:p-3 rounded-lg flex-shrink-0">
               <ClockIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function StaffDashboard() {
               <p className="text-xs sm:text-sm text-gray-600 mb-1">Sessions Today</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stats?.attendance?.sessionsToday || 0}</p>
             </div>
-            <div className="bg-purple-500 p-2 sm:p-3 rounded-lg flex-shrink-0">
+            <div className="bg-[#6b8bad] p-2 sm:p-3 rounded-lg flex-shrink-0">
               <CalendarDaysIcon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </div>
           </div>
@@ -130,13 +130,13 @@ export default function StaffDashboard() {
                 <div className="mt-2 sm:mt-3 flex gap-2">
                   <Link
                     to={`/staff/attendance/mark?subject=${allocation.subject?._id}&section=${allocation.section}`}
-                    className="flex-1 text-center text-xs bg-blue-50 text-blue-700 px-2 sm:px-3 py-1.5 sm:py-2 rounded hover:bg-blue-100"
+                    className="flex-1 text-center text-xs bg-primary-50 text-primary-700 px-2 sm:px-3 py-1.5 sm:py-2 rounded hover:bg-primary-100"
                   >
                     Attendance
                   </Link>
                   <Link
                     to={`/staff/marks/enter?subject=${allocation.subject?._id}&section=${allocation.section}`}
-                    className="flex-1 text-center text-xs bg-green-50 text-green-700 px-2 sm:px-3 py-1.5 sm:py-2 rounded hover:bg-green-100"
+                    className="flex-1 text-center text-xs bg-primary-50 text-primary-600 px-2 sm:px-3 py-1.5 sm:py-2 rounded hover:bg-primary-100"
                   >
                     Marks
                   </Link>

@@ -54,9 +54,9 @@ export default function MyActivities() {
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-blue-50 rounded-lg p-4">
-          <p className="text-sm text-blue-600 mb-1">Total</p>
-          <p className="text-2xl font-bold text-blue-900">{stats.total}</p>
+        <div className="bg-primary-50 rounded-lg p-4">
+          <p className="text-sm text-primary-600 mb-1">Total</p>
+          <p className="text-2xl font-bold text-primary-700">{stats.total}</p>
         </div>
         <div className="bg-green-50 rounded-lg p-4">
           <p className="text-sm text-green-600 mb-1">Verified</p>

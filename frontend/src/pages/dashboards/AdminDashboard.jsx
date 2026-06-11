@@ -50,21 +50,21 @@ export default function AdminDashboard() {
       title: 'Total Users',
       value: stats?.totalUsers || 0,
       icon: UserGroupIcon,
-      color: 'bg-blue-500',
+      color: 'bg-[#002045]',
       link: '/admin/users',
     },
     {
       title: 'Departments',
       value: stats?.totalDepartments || 0,
       icon: BuildingOfficeIcon,
-      color: 'bg-purple-500',
+      color: 'bg-[#1a4971]',
       link: '/admin/departments',
     },
     {
       title: 'Subjects',
       value: stats?.totalSubjects || 0,
       icon: BookOpenIcon,
-      color: 'bg-yellow-500',
+      color: 'bg-[#3d6b99]',
       link: '/admin/subjects',
     },
   ];
@@ -72,9 +72,9 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Welcome */}
-      <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-[#002045] to-[#0a2e61] rounded-xl p-4 sm:p-6 text-white">
         <h1 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Admin Dashboard</h1>
-        <p className="text-red-100 text-sm sm:text-base">{stats?.institutionName || 'Student Activity Management System'}</p>
+        <p className="text-blue-100/80 text-sm sm:text-base">{stats?.institutionName || 'Student Activity Management System'}</p>
       </div>
 
       {/* Stats Grid */}
@@ -112,14 +112,14 @@ export default function AdminDashboard() {
                 <div key={role} className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <div className={`h-8 w-8 sm:h-10 sm:w-10 rounded-lg flex items-center justify-center ${
-                      role === 'admin' ? 'bg-red-100' :
-                      role === 'hod' ? 'bg-purple-100' :
-                      role === 'staff' ? 'bg-blue-100' : 'bg-green-100'
+                      role === 'admin' ? 'bg-primary-50' :
+                      role === 'hod' ? 'bg-primary-100' :
+                      role === 'staff' ? 'bg-primary-100' : 'bg-primary-50'
                     }`}>
                       <UserGroupIcon className={`h-4 w-4 sm:h-5 sm:w-5 ${
-                        role === 'admin' ? 'text-red-600' :
-                        role === 'hod' ? 'text-purple-600' :
-                        role === 'staff' ? 'text-blue-600' : 'text-green-600'
+                        role === 'admin' ? 'text-primary-700' :
+                        role === 'hod' ? 'text-primary-600' :
+                        role === 'staff' ? 'text-primary-600' : 'text-primary-700'
                       }`} />
                     </div>
                     <span className="font-medium text-gray-900 capitalize text-sm sm:text-base">{role}</span>
@@ -139,28 +139,28 @@ export default function AdminDashboard() {
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <DocumentCheckIcon className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                <DocumentCheckIcon className="h-4 w-4 sm:h-5 sm:w-5 text-primary-600" />
                 <span className="text-xs sm:text-sm text-gray-700">Total Activities</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.totalActivities || 0}</span>
             </div>
             <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <DocumentCheckIcon className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+                <DocumentCheckIcon className="h-4 w-4 sm:h-5 sm:w-5 text-primary-500" />
                 <span className="text-xs sm:text-sm text-gray-700">Verified Activities</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.verifiedActivities || 0}</span>
             </div>
             <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <DocumentCheckIcon className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
+                <DocumentCheckIcon className="h-4 w-4 sm:h-5 sm:w-5 text-primary-400" />
                 <span className="text-xs sm:text-sm text-gray-700">Pending Verification</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.pendingActivities || 0}</span>
             </div>
             <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <ChartBarIcon className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+                <ChartBarIcon className="h-4 w-4 sm:h-5 sm:w-5 text-primary-600" />
                 <span className="text-xs sm:text-sm text-gray-700">Subject Allocations</span>
               </div>
               <span className="font-bold text-gray-900">{stats?.totalAllocations || 0}</span>

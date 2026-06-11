@@ -178,8 +178,8 @@ export default function HODSubjectsManagement() {
   };
 
   const getTypeIcon = (type) => {
-    if (type === 'add') return <PlusIcon className="h-5 w-5 text-green-600" />;
-    if (type === 'modify') return <PencilIcon className="h-5 w-5 text-blue-600" />;
+    if (type === 'add') return <PlusIcon className="h-5 w-5 text-primary-500" />;
+    if (type === 'modify') return <PencilIcon className="h-5 w-5 text-primary-600" />;
     return <TrashIcon className="h-5 w-5 text-red-600" />;
   };
 
@@ -282,7 +282,7 @@ export default function HODSubjectsManagement() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <BookOpenIcon className="h-5 w-5 text-blue-600 flex-shrink-0" />
+                          <BookOpenIcon className="h-5 w-5 text-primary-600 flex-shrink-0" />
                           <p className="font-medium text-gray-900 truncate">{subj.name}</p>
                         </div>
                         <p className="text-sm text-gray-500 ml-7">{subj.code}</p>
@@ -290,14 +290,14 @@ export default function HODSubjectsManagement() {
                           <span className="text-xs text-gray-600">{subj.program?.name}</span>
                           <span className="text-xs text-gray-600">Sem {subj.semester}</span>
                           <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                            subj.type === 'lab' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+                            subj.type === 'lab' ? 'bg-primary-100 text-primary-700' : 'bg-primary-50 text-primary-600'
                           }`}>
                             {subj.type}
                           </span>
                         </div>
                       </div>
                       <div className="flex flex-col gap-1 ml-2">
-                        <button onClick={() => openModifyModal(subj)} className="p-2 text-gray-400 hover:text-blue-600">
+                        <button onClick={() => openModifyModal(subj)} className="p-2 text-gray-400 hover:text-primary-600">
                           <PencilIcon className="h-5 w-5" />
                         </button>
                         <button onClick={() => openRemoveModal(subj)} className="p-2 text-gray-400 hover:text-red-600">
@@ -328,7 +328,7 @@ export default function HODSubjectsManagement() {
                         <tr key={subj._id} className="hover:bg-gray-50">
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <BookOpenIcon className="h-5 w-5 text-blue-600" />
+                              <BookOpenIcon className="h-5 w-5 text-primary-600" />
                               <div>
                                 <p className="font-medium text-gray-900">{subj.name}</p>
                                 <p className="text-sm text-gray-500">{subj.code}</p>
@@ -339,7 +339,7 @@ export default function HODSubjectsManagement() {
                           <td className="px-6 py-4 text-sm text-gray-600">Sem {subj.semester}</td>
                           <td className="px-6 py-4">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              subj.type === 'lab' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+                              subj.type === 'lab' ? 'bg-primary-100 text-primary-700' : 'bg-primary-50 text-primary-600'
                             }`}>
                               {subj.type}
                             </span>
@@ -348,7 +348,7 @@ export default function HODSubjectsManagement() {
                           <td className="px-6 py-4 text-right">
                             <button
                               onClick={() => openModifyModal(subj)}
-                              className="p-2 text-gray-400 hover:text-blue-600"
+                              className="p-2 text-gray-400 hover:text-primary-600"
                               title="Request Modification"
                             >
                               <PencilIcon className="h-5 w-5" />

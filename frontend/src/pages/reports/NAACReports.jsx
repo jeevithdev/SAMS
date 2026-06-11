@@ -108,9 +108,9 @@ export default function NAACReports() {
       </div>
 
       {/* Info */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-        <h3 className="font-semibold text-blue-900 mb-2">Report Format</h3>
-        <ul className="text-sm text-blue-700 space-y-1">
+      <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
+        <h3 className="font-semibold text-primary-700 mb-2">Report Format</h3>
+        <ul className="text-sm text-primary-600 space-y-1">
           <li>• All reports are generated in CSV format for easy import into Excel</li>
           <li>• Data is filtered based on the selected date range</li>
           <li>• Comprehensive report includes all modules: Activities, Attendance, and Marks</li>
